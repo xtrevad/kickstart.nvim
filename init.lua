@@ -716,6 +716,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'black', -- Python formatter
+        'isort', -- Python import sorter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -850,7 +852,7 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
       },
 
       sources = {
@@ -869,7 +871,7 @@ require('lazy').setup({
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
+      fuzzy = { implementation = 'prefer_rust_with_warning' },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
@@ -887,7 +889,7 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
         styles = {
-          comments = { italic = false }, -- Disable italics in comments
+          comments = { italic = true }, -- Enable italics in comments
         },
       }
 
@@ -944,7 +946,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -974,11 +976,37 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+
+  { -- Smooth scrolling
+    'karb94/neoscroll.nvim',
+    opts = {
+      mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', 'zt', 'zz', 'zb' },
+    },
+  },
+
+  { -- AI-assisted autocompletion
+    'Exafunction/windsurf.vim',
+    event = 'BufEnter',
+    config = function()
+      vim.keymap.set('i', '<C-g>', function()
+        return vim.fn['codeium#Accept']()
+      end, { expr = true, silent = true })
+      vim.keymap.set('i', '<C-;>', function()
+        return vim.fn['codeium#CycleCompletions'](1)
+      end, { expr = true, silent = true })
+      vim.keymap.set('i', '<C-,>', function()
+        return vim.fn['codeium#CycleCompletions'](-1)
+      end, { expr = true, silent = true })
+      vim.keymap.set('i', '<C-x>', function()
+        return vim.fn['codeium#Clear']()
+      end, { expr = true, silent = true })
+    end,
+  },
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
