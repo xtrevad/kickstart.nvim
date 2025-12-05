@@ -204,6 +204,7 @@ vim.keymap.set('n', '<leader>vst', function()
   local new_win = vim.api.nvim_get_current_win()
   vim.api.nvim_set_current_win(new_win)
   vim.cmd 'vertical resize -40'
+  vim.cmd 'startinsert'
 end, { desc = 'Vertical split terminal' })
 
 vim.keymap.set('n', '<leader>hst', function()
@@ -211,6 +212,7 @@ vim.keymap.set('n', '<leader>hst', function()
   local new_win = vim.api.nvim_get_current_win()
   vim.api.nvim_set_current_win(new_win)
   vim.cmd 'resize -20'
+  vim.cmd 'startinsert'
 end, { desc = 'Horizontal split terminal' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
