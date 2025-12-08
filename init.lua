@@ -129,6 +129,19 @@ vim.keymap.set('n', '<leader>hst', function()
   vim.cmd 'startinsert'
 end, { desc = 'Horizontal split terminal' })
 
+-- Auto-activate Python venv in terminals
+vim.api.nvim_create_autocmd('TermOpen', {
+  callback = function()
+    local venv = vim.fn.getcwd() .. '/.venv/bin/activate'
+    if vim.fn.filereadable(venv) == 1 then
+      local chan = vim.b.terminal_job_id
+      if chan then
+        vim.fn.chansend(chan, 'source .venv/bin/activate\n')
+      end
+    end
+  end,
+})
+
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -602,20 +615,27 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-      local selocal
-      servers =
-        { -- clangd = {},        -- gopls = {},        pyright = {          before_init = function(_, config)            local venv = config.root_dir .. '/.venv/bin/python'            if vim.fn.filereadable(venv) == 1 then              config.settings = config.settings or {}              config.settings.python = config.settings.python or {}              config.settings.python.pythonPath = venv            end          end,        },rvers = {
+      local servers = {
           -- clangd = {},
           -- gopls = {},
           pyright = {
             before_init = function(_, config)
-              local venv = config.root_dir .. '/.venv/bin/python'
-              if vim.fn.filereadable(venv) == 1 then
+              local venv_python = config.root_dir .. '/.venv/bin/python'
+              if vim.fn.executable(venv_python) == 1 then
                 config.settings = config.settings or {}
                 config.settings.python = config.settings.python or {}
-                config.settings.python.pythonPath = venv
+                config.settings.python.pythonPath = venv_python
               end
             end,
+            settings = {
+              python = {
+                analysis = {
+                  diagnosticSeverityOverrides = {
+                    reportMissingTypeStubs = 'none',
+                  },
+                },
+              },
+            },
           },
           -- rust_analyzer = {},
           -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
