@@ -250,6 +250,8 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
+vim.g.python3_host_prog = vim.fn.expand '~/.venv/bin/python'
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
