@@ -54,6 +54,7 @@ vim.o.timeoutlen = 300
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true
+vim.o.equalalways = false
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
@@ -616,52 +617,52 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-          -- clangd = {},
-          -- gopls = {},
-          pyright = {
-            before_init = function(_, config)
-              local venv_python = config.root_dir .. '/.venv/bin/python'
-              if vim.fn.executable(venv_python) == 1 then
-                config.settings = config.settings or {}
-                config.settings.python = config.settings.python or {}
-                config.settings.python.pythonPath = venv_python
-              end
-            end,
-            settings = {
-              python = {
-                analysis = {
-                  diagnosticSeverityOverrides = {
-                    reportMissingTypeStubs = 'none',
-                  },
+        -- clangd = {},
+        -- gopls = {},
+        pyright = {
+          before_init = function(_, config)
+            local venv_python = config.root_dir .. '/.venv/bin/python'
+            if vim.fn.executable(venv_python) == 1 then
+              config.settings = config.settings or {}
+              config.settings.python = config.settings.python or {}
+              config.settings.python.pythonPath = venv_python
+            end
+          end,
+          settings = {
+            python = {
+              analysis = {
+                diagnosticSeverityOverrides = {
+                  reportMissingTypeStubs = 'none',
                 },
               },
             },
           },
-          -- rust_analyzer = {},
-          -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-          --
-          -- Some languages (like typescript) have entire language plugins that can be useful:
-          --    https://github.com/pmizio/typescript-tools.nvim
-          --
-          -- But for many setups, the LSP (`ts_ls`) will work just fine
-          -- ts_ls = {},
-          --
+        },
+        -- rust_analyzer = {},
+        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+        --
+        -- Some languages (like typescript) have entire language plugins that can be useful:
+        --    https://github.com/pmizio/typescript-tools.nvim
+        --
+        -- But for many setups, the LSP (`ts_ls`) will work just fine
+        -- ts_ls = {},
+        --
 
-          lua_ls = {
-            -- cmd = { ... },
-            -- filetypes = { ... },
-            -- capabilities = {},
-            settings = {
-              Lua = {
-                completion = {
-                  callSnippet = 'Replace',
-                },
-                -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-                -- diagnostics = { disable = { 'missing-fields' } },
+        lua_ls = {
+          -- cmd = { ... },
+          -- filetypes = { ... },
+          -- capabilities = {},
+          settings = {
+            Lua = {
+              completion = {
+                callSnippet = 'Replace',
               },
+              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+              -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
-        }
+        },
+      }
 
       -- Ensure the servers and tools above are installed
       --
