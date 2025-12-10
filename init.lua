@@ -130,9 +130,15 @@ vim.keymap.set('n', '<leader>hst', function()
   vim.cmd 'startinsert'
 end, { desc = 'Horizontal split terminal' })
 
--- Auto-activate Python venv in terminals
+-- Auto-activate Python venv in terminals (excluding toggleterm like lazygit)
 vim.api.nvim_create_autocmd('TermOpen', {
   callback = function()
+    -- Skip toggleterm terminals (lazygit, etc.)
+    local bufname = vim.api.nvim_buf_get_name(0)
+    if bufname:match 'toggleterm' then
+      return
+    end
+
     local venv = vim.fn.getcwd() .. '/.venv/bin/activate'
     if vim.fn.filereadable(venv) == 1 then
       local chan = vim.b.terminal_job_id
