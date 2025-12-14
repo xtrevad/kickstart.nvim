@@ -656,6 +656,8 @@ require('lazy').setup({
 
         lua_ls = {
           -- cmd = { ... },
+          mason = false,
+          cmd = { '/data/data/com.termux/files/usr/bin/lua-language-server' },
           -- filetypes = { ... },
           -- capabilities = {},
           settings = {
@@ -685,9 +687,9 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'black', -- Python formatter
-        'isort', -- Python import sorter
+        --'stylua', -- Used to format Lua code
+        -- 'black', -- Python formatter
+        --'isort', -- Python import sorter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -746,6 +748,13 @@ require('lazy').setup({
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
+
+      formatters = {
+        stylua = { command = '/data/data/com.termux/files/usr/bin/stylua' },
+        black = { command = '/data/data/com.termux/files/usr/bin/black' },
+        isort = { command = '/data/data/com.termux/files/usr/bin/isort' },
+      },
+      --  },
     },
   },
 
