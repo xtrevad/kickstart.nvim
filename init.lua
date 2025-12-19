@@ -143,7 +143,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
     if vim.fn.filereadable(venv) == 1 then
       local chan = vim.b.terminal_job_id
       if chan then
-        vim.fn.chansend(chan, 'source .venv/bin/activate\n')
+        vim.fn.chansend(chan, 'source .venv/bin/activate && clear\n')
       end
     end
   end,
