@@ -971,6 +971,11 @@ require('lazy').setup({
   { -- AI-assisted autocompletion
     'Exafunction/windsurf.vim',
     event = 'BufEnter',
+    init = function()
+      vim.g.codeium_filetypes = {
+        markdown = false,
+      }
+    end,
     config = function()
       -- Disable codeium for markdown files
       vim.g.codeium_filetypes = { markdown = false }
