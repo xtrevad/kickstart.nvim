@@ -7,6 +7,9 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
+-- Python provider for plugins like molten-nvim
+vim.g.python3_host_prog = vim.fn.expand("~/.config/nvim/.venv/bin/python")
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -183,8 +186,6 @@ end
 ---@type vim.Option
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
-
-vim.g.python3_host_prog = vim.fn.expand '~/.venv/bin/python'
 
 -- [[ Configure and install plugins ]]
 --
